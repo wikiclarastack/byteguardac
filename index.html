@@ -12,8 +12,8 @@
             --primary: #00f2ff;
             --secondary: #7000ff;
             --bg: #020205;
-            --card: rgba(15, 15, 25, 0.8);
-            --border: rgba(0, 242, 255, 0.15);
+            --card: rgba(8, 9, 15, 0.95);
+            --border: rgba(0, 242, 255, 0.1);
             --text: #ffffff;
             --danger: #ff004c;
             --success: #00ff95;
@@ -21,236 +21,306 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: none; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; scroll-behavior: smooth; }
-        
+
+        /* Loader de Entrada */
+        #loader {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: 1s ease-in-out;
+        }
+        .load-bar { width: 200px; height: 2px; background: #111; margin-top: 20px; overflow: hidden; }
+        .load-progress { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: load 2.5s forwards; }
+        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
+
         /* Cursor */
-        #cursor { width: 25px; height: 25px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s, background 0.3s; mix-blend-mode: difference; }
-        #cursor-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
+        #cursor { width: 25px; height: 25px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; background: rgba(0, 242, 255, 0.05); }
+        #cursor-dot { width: 4px; height: 4px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
 
-        canvas#particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.3; }
+        /* Fundo Grade 3D */
+        canvas#bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
-        /* Header */
         header {
-            position: fixed; width: 100%; padding: 20px 8%;
+            position: fixed; width: 100%; padding: 25px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(2, 2, 5, 0.8); backdrop-filter: blur(20px);
+            background: rgba(2, 2, 5, 0.8); backdrop-filter: blur(15px);
             z-index: 1000; border-bottom: 1px solid var(--border);
         }
-        .logo { font-family: 'Space Grotesk'; font-weight: 700; color: var(--primary); font-size: 1.5rem; text-shadow: 0 0 15px var(--primary); }
+        .logo { font-family: 'Space Grotesk'; font-weight: 700; color: var(--primary); font-size: 1.4rem; letter-spacing: -1px; }
 
         /* Hero */
-        .hero { height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; }
-        .hero h1 { font-family: 'Space Grotesk'; font-size: clamp(3rem, 10vw, 7rem); line-height: 0.9; margin-bottom: 20px; }
-        .hero h1 span { background: linear-gradient(180deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; position: relative; }
+        .hero h1 { font-family: 'Space Grotesk'; font-size: clamp(3rem, 10vw, 7.5rem); line-height: 0.85; margin-bottom: 25px; font-weight: 700; }
+        .hero h1 span { background: linear-gradient(180deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.2)); }
 
-        /* --- SIMULADOR DE EXPLOIT --- */
-        .simulation-section { padding: 60px 8%; display: flex; flex-direction: column; align-items: center; }
-        .window-top { background: #1a1a1a; padding: 10px 20px; border-radius: 12px 12px 0 0; width: 100%; display: flex; gap: 8px; border: 1px solid var(--border); border-bottom: none; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .sim-container { 
-            width: 100%; max-width: 900px; background: #0a0a0f; 
-            border: 1px solid var(--border); border-radius: 0 0 12px 12px;
-            font-family: 'Fira Code', monospace; padding: 30px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8); position: relative;
-            min-height: 400px;
-        }
-        .code-input { color: #888; margin-bottom: 20px; border-right: 2px solid var(--primary); width: fit-content; animation: blink 1s infinite; }
-        @keyframes blink { 50% { border-color: transparent; } }
-        .sim-log { margin-top: 15px; font-size: 0.9rem; line-height: 1.5; }
-        .status-badge { padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-right: 10px; }
-        .badge-danger { background: var(--danger); color: white; }
-        .badge-info { background: var(--primary); color: black; }
+        /* Demo Complexa */
+        .simulation-container { max-width: 1000px; margin: 0 auto; background: #050508; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.8); }
+        .sim-header { background: #111; padding: 12px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+        .sim-body { display: grid; grid-template-columns: 1fr 1fr; height: 450px; }
+        .sim-panel { padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; overflow-y: auto; background: #08080c; }
+        .server-logs { border-left: 1px solid var(--border); background: #040406; }
+        .typing-effect { color: var(--primary); min-height: 1.2em; border-right: 2px solid var(--primary); width: fit-content; margin-bottom: 10px; }
         
         /* Modal de Kick */
-        #kick-modal {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-            background: #fff; color: #000; padding: 40px; border-radius: 4px;
-            text-align: center; width: 80%; display: none; z-index: 10;
-            box-shadow: 0 0 100px rgba(255,0,0,0.5);
-        }
+        #kick-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.95); color: #000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; z-index: 20; }
 
-        /* Pricing & Cards */
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
-        .card { 
-            background: var(--card); padding: 50px 40px; border-radius: 20px; 
-            border: 1px solid var(--border); transition: 0.4s; position: relative;
-            overflow: hidden;
-        }
-        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); }
-        .card::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transition: 0.5s; }
-        .card:hover::after { left: 100%; }
+        /* Seções Reutilizadas */
+        section { padding: 120px 8%; position: relative; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); transition: 0.4s; backdrop-filter: blur(10px); }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
 
-        .btn {
-            padding: 18px 45px; background: var(--primary); color: #000;
-            text-decoration: none; border-radius: 4px; font-weight: 800;
-            text-transform: uppercase; display: inline-block; transition: 0.3s;
-            border: none; margin-top: 20px;
-        }
-        .btn:hover { box-shadow: 0 0 30px var(--primary); transform: scale(1.05); }
+        .price-card.featured { border: 2px solid var(--primary); background: linear-gradient(145deg, rgba(0,242,255,0.05), rgba(8,9,15,0.95)); }
 
-        section { padding: 120px 8%; }
-        .section-title { font-family: 'Space Grotesk'; font-size: 3.5rem; margin-bottom: 20px; text-align: center; }
+        .btn { padding: 18px 45px; border-radius: 4px; font-weight: 800; text-transform: uppercase; text-decoration: none; display: inline-block; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-primary:hover { box-shadow: 0 0 30px var(--primary); transform: translateY(-2px); }
 
-        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); color: #444; font-size: 0.8rem; }
+        .faq-item { background: var(--card); border: 1px solid var(--border); margin-bottom: 15px; border-radius: 12px; cursor: pointer; }
+        .faq-q { padding: 20px; display: flex; justify-content: space-between; font-weight: 600; }
+        .faq-a { padding: 0 20px 20px; color: #888; display: none; }
 
-        @media (max-width: 768px) { .hero h1 { font-size: 3.5rem; } .sim-container { font-size: 0.7rem; } }
+        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); color: #444; font-size: 0.8rem; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
+    <div id="loader">
+        <div class="logo">BYTEGUARD <span style="font-weight: 300; color: #fff;">OMEGA</span></div>
+        <div class="load-bar"><div class="load-progress"></div></div>
+        <div style="margin-top: 15px; font-size: 0.6rem; letter-spacing: 2px; color: #444;">INITIALIZING DEFENSE SYSTEMS...</div>
+    </div>
+
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
-    <canvas id="particles"></canvas>
+    <canvas id="bg-canvas"></canvas>
 
     <header>
         <div class="logo">BYTEGUARD <span style="font-weight: 300; color: #fff;">OMEGA</span></div>
-        <nav style="display: flex; gap: 20px;">
-            <a href="#demo" style="color: var(--primary); text-decoration: none; font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">LIVE DEMO</a>
-            <a href="https://discord.gg/4uNWVnwMdR" style="color: #fff; text-decoration: none; font-size: 0.7rem;">DISCORD</a>
+        <nav style="display: flex; gap: 30px;">
+            <a href="#demo" style="color: var(--primary); text-decoration: none; font-size: 0.75rem; font-weight: 700;">LIVE DEMO</a>
+            <a href="#features" style="color: #fff; text-decoration: none; font-size: 0.75rem;">SISTEMAS</a>
+            <a href="#pricing" style="color: #fff; text-decoration: none; font-size: 0.75rem;">PREÇOS</a>
         </nav>
     </header>
 
     <section class="hero">
-        <div style="background: rgba(0, 242, 255, 0.1); padding: 8px 20px; border-radius: 50px; border: 1px solid var(--primary); font-size: 0.7rem; font-weight: bold; margin-bottom: 20px;" data-aos="fade-down">ELITE PROTECTION SYSTEM</div>
-        <h1 data-aos="fade-up">Defesa <span>Instantânea.</span></h1>
-        <p style="max-width: 600px; color: #888; margin-bottom: 40px;" data-aos="fade-up" data-aos-delay="100">Cansado de ver seu jogo destruído em segundos? O ByteGuard Omega intercepta e bane exploiters antes mesmo do script terminar de carregar.</p>
-        <a href="#demo" class="btn" data-aos="zoom-in" data-aos-delay="200">Ver Simulação</a>
+        <div data-aos="fade-down" style="color: var(--primary); font-size: 0.7rem; font-weight: 800; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 50px; margin-bottom: 20px;">V4.2 OMEGA EDITION</div>
+        <h1 data-aos="fade-up">A Morte das <span>Trapaças.</span></h1>
+        <p style="max-width: 650px; color: #888; margin-bottom: 40px;" data-aos="fade-up" data-aos-delay="100">Proteja seu servidor com o anti-cheat mais avançado do cenário. Heurística avançada, zero latência e banimentos automáticos em milissegundos.</p>
+        <div data-aos="zoom-in" data-aos-delay="300">
+            <a href="#pricing" class="btn btn-primary">Adquirir Proteção</a>
+        </div>
     </section>
 
-    <section id="demo" class="simulation-section">
-        <h2 class="section-title" data-aos="fade-up">Ameaça <span>Neutralizada</span></h2>
-        <p style="color: #666; margin-bottom: 40px;">Veja como o ByteGuard lida com um executor de scripts em tempo real.</p>
-        
-        <div class="window-top" data-aos="fade-up">
-            <div class="dot" style="background: #ff5f56;"></div>
-            <div class="dot" style="background: #ffbd2e;"></div>
-            <div class="dot" style="background: #27c93f;"></div>
-            <span style="font-size: 0.7rem; color: #555; margin-left: 10px; font-family: monospace;">Synapse_X_Emulator.lua</span>
+    <section id="demo">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h2 class="section-title" data-aos="fade-up">Inteligência <span>Ativa</span></h2>
+            <p style="color: #666;">Observe a resposta do servidor contra tentativas coordenadas de injeção.</p>
         </div>
-        <div class="sim-container" data-aos="fade-up">
-            <div id="typewriter" class="code-input"></div>
-            <div id="logs-container"></div>
-            
-            <div id="kick-modal">
-                <img src="https://cdn-icons-png.flaticon.com/512/753/753345.png" width="50" style="margin-bottom: 20px;">
-                <h2 style="margin-bottom: 10px; font-family: sans-serif;">You were kicked from this experience</h2>
-                <p style="color: #555; margin-bottom: 20px;">Reason: [ByteGuard Omega] Malicious Script Injection Detected (WalkSpeed Manipulation).</p>
-                <button onclick="restartSim()" style="padding: 10px 20px; cursor: pointer; background: #000; color: #fff; border: none; border-radius: 4px;">Reconnect</button>
+
+        <div class="simulation-container" data-aos="zoom-in" id="sim-box">
+            <div class="sim-header">
+                <div style="display: flex; gap: 6px;"><div class="dot" style="width:10px; height:10px; border-radius:50%; background:#ff5f56;"></div><div class="dot" style="width:10px; height:10px; border-radius:50%; background:#ffbd2e;"></div><div class="dot" style="width:10px; height:10px; border-radius:50%; background:#27c93f;"></div></div>
+                <span style="font-size: 0.65rem; color: #555; font-family: monospace;">EXPLOITER_V6_SIMULATOR</span>
+            </div>
+            <div class="sim-body" style="position: relative;">
+                <div id="kick-screen">
+                    <img src="https://cdn-icons-png.flaticon.com/512/753/341.png" width="40" style="margin-bottom: 10px;">
+                    <h3 style="font-family: sans-serif;">Disconnected</h3>
+                    <p style="font-family: sans-serif; font-size: 0.9rem; margin-top: 10px;">Reason: [ByteGuard] Exploit Environment Detected.</p>
+                    <button onclick="startSimulation()" class="btn-primary" style="margin-top: 20px; padding: 10px 20px; font-size: 0.7rem;">Tentar Novamente</button>
+                </div>
+                
+                <div class="sim-panel">
+                    <div style="color: #444; margin-bottom: 10px;">-- Client Side Executor</div>
+                    <div id="client-typing" class="typing-effect"></div>
+                    <div id="client-logs"></div>
+                </div>
+                <div class="sim-panel server-logs">
+                    <div style="color: #444; margin-bottom: 10px;">// Server Side Console</div>
+                    <div id="server-logs"></div>
+                </div>
             </div>
         </div>
     </section>
 
     <section id="features">
-        <div class="cards-grid">
+        <div class="grid">
             <div class="card" data-aos="fade-up">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Anti-Injection</h3>
-                <p style="color: #777;">Detectamos a presença de bibliotecas externas e ambientes de execução não autorizados antes do primeiro ciclo do servidor.</p>
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Anti-DEX Protection</h3>
+                <p style="color: #888;">Bloqueia exploradores de interface e visualizadores de script locais em tempo real.</p>
             </div>
             <div class="card" data-aos="fade-up" data-aos-delay="100">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Physics Shield</h3>
-                <p style="color: #777;">Um sistema de verificação constante de posição (XYZ) que previne NoClip, Fly e Teleport com 0% de falsos positivos.</p>
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Network Security</h3>
+                <p style="color: #888;">Interceptação de RemoteEvents para prevenir Spam e GodMode via Server-Side.</p>
             </div>
             <div class="card" data-aos="fade-up" data-aos-delay="200">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Remote Lock</h3>
-                <p style="color: #777;">Bloqueamos o disparo excessivo de RemoteEvents, impedindo lag-servers e crash-scripts comuns em jogos públicos.</p>
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Custom Physics</h3>
+                <p style="color: #888;">Verificações de Raycast para evitar voos (Fly) e passagens por paredes (NoClip).</p>
             </div>
         </div>
     </section>
 
-    <section style="text-align: center; background: radial-gradient(circle at center, #0a0a1f 0%, var(--bg) 100%);">
-        <h2 class="section-title">Proteja seu <span>Legado.</span></h2>
-        <p style="color: #888; margin-bottom: 40px;">Mais de 500 servidores confiam na tecnologia Omega.</p>
-        <a href="https://discord.gg/4uNWVnwMdR" class="btn">Adquirir Agora</a>
+    <section id="pricing" style="background: rgba(0,242,255,0.02);">
+        <h2 style="text-align: center; margin-bottom: 50px;" class="section-title">Investimento em <span>Paz.</span></h2>
+        <div class="grid">
+            <div class="card price-card" data-aos="fade-right">
+                <h4>Mensal</h4>
+                <div style="font-size: 2.5rem; font-weight: 700; margin: 20px 0;">R$ 49,90</div>
+                <p style="color: #666; margin-bottom: 20px;">Ideal para projetos em crescimento.</p>
+                <a href="#" class="btn btn-primary" style="width: 100%;">Assinar</a>
+            </div>
+            <div class="card price-card featured" data-aos="fade-up">
+                <h4 style="color: var(--primary);">Vitalício</h4>
+                <div style="font-size: 2.5rem; font-weight: 700; margin: 20px 0;">R$ 199,90</div>
+                <p style="color: #888; margin-bottom: 20px;">Pagamento único. Proteção para sempre.</p>
+                <a href="https://discord.gg/4uNWVnwMdR" class="btn btn-primary" style="width: 100%;">Garantir Agora</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2 style="text-align: center; margin-bottom: 40px;">Dúvidas <span>Frequentes</span></h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">O ByteGuard detecta Synapse/Wave? <span>+</span></div>
+                <div class="faq-a">Sim. Utilizamos verificações de metatable e constantes de ambiente para identificar os principais executores do mercado.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Como é feita a instalação? <span>+</span></div>
+                <div class="faq-a">Simples. Basta arrastar nosso Model oficial para o ServerScriptService e inserir sua Key.</div>
+            </div>
+        </div>
     </section>
 
     <footer>
-        BYTEGUARD OMEGA &copy; 2026 • THE ULTIMATE DEFENSE
+        BYTEGUARD OMEGA &copy; 2026 • ADVANCED CYBER DEFENSE FOR ROBLOX
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true });
+        // Loader
+        window.onload = () => { 
+            setTimeout(() => { document.getElementById('loader').style.opacity = '0'; 
+            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1000);
+            AOS.init({ duration: 1000 });
+            }, 2500);
+        };
+
+        // Background Grid Effect
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let mouse = { x: 0, y: 0 };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'rgba(0, 242, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const size = 50;
+
+            for (let x = 0; x < canvas.width; x += size) {
+                for (let y = 0; y < canvas.height; y += size) {
+                    const dx = x - mouse.x;
+                    const dy = y - mouse.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    const opacity = Math.max(0, 1 - dist / 300);
+                    
+                    ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 0.2})`;
+                    ctx.strokeRect(x, y, size, size);
+                }
+            }
+            requestAnimationFrame(drawGrid);
+        }
+        drawGrid();
 
         // Cursor
         const cursor = document.getElementById('cursor');
         const dot = document.getElementById('cursor-dot');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 12 + 'px';
-            cursor.style.top = e.clientY - 12 + 'px';
-            dot.style.left = e.clientX - 2 + 'px';
-            dot.style.top = e.clientY - 2 + 'px';
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX - 12 + 'px'; cursor.style.top = e.clientY - 12 + 'px';
+            dot.style.left = e.clientX - 2 + 'px'; dot.style.top = e.clientY - 2 + 'px';
         });
 
-        // Simulação de Exploiter
-        const codeText = "game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 500";
-        const typewriter = document.getElementById('typewriter');
-        const logs = document.getElementById('logs-container');
-        const modal = document.getElementById('kick-modal');
-        let i = 0;
-
-        function runSimulation() {
-            if (i < codeText.length) {
-                typewriter.innerHTML += codeText.charAt(i);
-                i++;
-                setTimeout(runSimulation, 50);
-            } else {
-                setTimeout(triggerDetection, 800);
-            }
+        // FAQ
+        function toggleFaq(el) {
+            const a = el.querySelector('.faq-a');
+            a.style.display = a.style.display === 'block' ? 'none' : 'block';
         }
 
-        function triggerDetection() {
-            addLog("<span class='status-badge badge-info'>EXECUTING</span> Initializing script injection...", "#fff");
-            
-            setTimeout(() => {
-                addLog("<span class='status-badge badge-danger'>THREAT</span> WalkSpeed change detected: Player speed 500 (Limit: 16)", "#ff004c");
-                document.querySelector('.sim-container').style.boxShadow = "0 0 50px rgba(255,0,76,0.3)";
-            }, 1000);
+        // Complex Simulation Logic
+        const scripts = [
+            "setreadonly(getrawmetatable(game), false)",
+            "hookfunction(checkcaller, function() return true end)",
+            "LocalPlayer.Character.Humanoid.WalkSpeed = 100"
+        ];
+        
+        async function startSimulation() {
+            document.getElementById('kick-screen').style.display = 'none';
+            document.getElementById('client-logs').innerHTML = "";
+            document.getElementById('server-logs').innerHTML = "";
+            document.getElementById('sim-box').style.borderColor = "rgba(0, 242, 255, 0.1)";
 
+            for(let script of scripts) {
+                await typeScript(script);
+                addLog('client-logs', `Attempting injection: ${script.substring(0,15)}...`, '#888');
+                await sleep(500);
+            }
+
+            // Server Reaction
             setTimeout(() => {
-                addLog("<span class='status-badge badge-danger'>ACTION</span> Flagging user for Malicious Behavior...", "#ff004c");
+                addLog('server-logs', '[!] ALERT: Metatable hook attempt detected', '#ff004c');
+            }, 500);
+            setTimeout(() => {
+                addLog('server-logs', '[!] ALERT: WalkSpeed anomaly (100 > 16)', '#ff004c');
+            }, 1200);
+            setTimeout(() => {
+                addLog('server-logs', '[ACTION] Flagging user. Executing Kick...', '#ff004c');
+                document.getElementById('sim-box').style.borderColor = "#ff004c";
             }, 2000);
-
             setTimeout(() => {
-                modal.style.display = "block";
-                modal.style.transform = "translate(-50%, -50%) scale(1)";
+                document.getElementById('kick-screen').style.display = 'flex';
             }, 3000);
         }
 
-        function addLog(text, color) {
-            const div = document.createElement('div');
-            div.className = 'sim-log';
-            div.style.color = color;
-            div.innerHTML = `> ${text}`;
-            logs.appendChild(div);
+        function typeScript(txt) {
+            return new Promise(resolve => {
+                let i = 0;
+                const el = document.getElementById('client-typing');
+                el.innerHTML = "";
+                const interval = setInterval(() => {
+                    el.innerHTML += txt.charAt(i);
+                    i++;
+                    if(i >= txt.length) {
+                        clearInterval(interval);
+                        setTimeout(resolve, 500);
+                    }
+                }, 30);
+            });
         }
 
-        function restartSim() {
-            i = 0;
-            typewriter.innerHTML = "";
-            logs.innerHTML = "";
-            modal.style.display = "none";
-            document.querySelector('.sim-container').style.boxShadow = "0 30px 60px rgba(0,0,0,0.8)";
-            runSimulation();
+        function addLog(id, txt, color) {
+            const l = document.createElement('div');
+            l.style.color = color;
+            l.style.marginBottom = "5px";
+            l.innerHTML = `> ${txt}`;
+            document.getElementById(id).appendChild(l);
         }
 
-        // Iniciar quando chegar na seção
-        const observer = new IntersectionObserver((entries) => {
-            if(entries[0].isIntersecting) runSimulation();
-        }, { threshold: 0.5 });
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // Start when in view
+        const observer = new IntersectionObserver(e => { if(e[0].isIntersecting) startSimulation(); }, {threshold: 0.6});
         observer.observe(document.getElementById('demo'));
 
-        // Partículas
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        let pArr = [];
-        function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        class Particle {
-            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.s = Math.random()*2; }
-            draw() { ctx.fillStyle = '#00f2ff'; ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, Math.PI*2); ctx.fill(); }
-            update() { this.y -= 0.3; if(this.y < 0) this.y = canvas.height; }
-        }
-        for(let j=0; j<100; j++) pArr.push(new Particle());
-        function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); pArr.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animate); }
-        init(); animate();
     </script>
 </body>
 </html>
