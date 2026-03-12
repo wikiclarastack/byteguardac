@@ -3,324 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByteGuard AC | Omega Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <title>ByteGuard AC | End-To-End.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
     <style>
         :root {
             --primary: #00f2ff;
+            --primary-glow: rgba(0, 242, 255, 0.5);
             --secondary: #7000ff;
-            --bg: #020205;
-            --card: rgba(8, 9, 15, 0.95);
-            --border: rgba(0, 242, 255, 0.1);
+            --bg: #030308;
+            --card: rgba(10, 11, 20, 0.8);
+            --border: rgba(255, 255, 255, 0.05);
             --text: #ffffff;
+            --text-dim: #94a3b8;
             --danger: #ff004c;
             --success: #00ff95;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: none; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
 
-        /* Loader de Entrada */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: 1s ease-in-out;
-        }
-        .load-bar { width: 200px; height: 2px; background: #111; margin-top: 20px; overflow: hidden; }
-        .load-progress { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: load 2.5s forwards; }
-        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
 
-        /* Cursor */
-        #cursor { width: 25px; height: 25px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; background: rgba(0, 242, 255, 0.05); }
+        /* Cursor Customizado */
+        #cursor { width: 20px; height: 20px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.15s ease-out; mix-blend-mode: difference; }
         #cursor-dot { width: 4px; height: 4px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
 
-        /* Fundo Grade 3D */
-        canvas#bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+        /* Background Effects */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+        .glow-sphere { position: fixed; width: 500px; height: 500px; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); filter: blur(80px); z-index: -1; opacity: 0.1; pointer-events: none; }
 
+        /* Header */
         header {
-            position: fixed; width: 100%; padding: 25px 8%;
+            position: fixed; width: 100%; padding: 20px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(2, 2, 5, 0.8); backdrop-filter: blur(15px);
+            background: rgba(3, 3, 8, 0.7); backdrop-filter: blur(20px);
             z-index: 1000; border-bottom: 1px solid var(--border);
         }
-        .logo { font-family: 'Space Grotesk'; font-weight: 700; color: var(--primary); font-size: 1.4rem; letter-spacing: -1px; }
+        .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        .logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
+        nav a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: 0.3s; margin-left: 30px; text-transform: uppercase; letter-spacing: 1px; }
+        nav a:hover { color: var(--primary); }
+
+        /* Sections */
+        section { padding: 120px 10%; position: relative; }
+        .section-tag { color: var(--primary); font-size: 0.7rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; display: block; }
+        .section-title { font-family: 'Space Grotesk'; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 30px; line-height: 1.1; }
 
         /* Hero */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; position: relative; }
-        .hero h1 { font-family: 'Space Grotesk'; font-size: clamp(3rem, 10vw, 7.5rem); line-height: 0.85; margin-bottom: 25px; font-weight: 700; }
-        .hero h1 span { background: linear-gradient(180deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.2)); }
-
-        /* Demo Complexa */
-        .simulation-container { max-width: 1000px; margin: 0 auto; background: #050508; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.8); }
-        .sim-header { background: #111; padding: 12px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
-        .sim-body { display: grid; grid-template-columns: 1fr 1fr; height: 450px; }
-        .sim-panel { padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.8rem; overflow-y: auto; background: #08080c; }
-        .server-logs { border-left: 1px solid var(--border); background: #040406; }
-        .typing-effect { color: var(--primary); min-height: 1.2em; border-right: 2px solid var(--primary); width: fit-content; margin-bottom: 10px; }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+        .hero h1 span { background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Modal de Kick */
-        #kick-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.95); color: #000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; z-index: 20; }
+        /* Tabs System */
+        .tabs-container { margin-top: 50px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 40px; }
+        .tabs-nav { display: flex; gap: 10px; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px 25px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary-glow); }
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
 
-        /* Seções Reutilizadas */
-        section { padding: 120px 8%; position: relative; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); transition: 0.4s; backdrop-filter: blur(10px); }
-        .card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .price-card.featured { border: 2px solid var(--primary); background: linear-gradient(145deg, rgba(0,242,255,0.05), rgba(8,9,15,0.95)); }
+        /* Feature Card */
+        .f-card { background: rgba(255,255,255,0.02); padding: 30px; border-radius: 16px; border: 1px solid var(--border); transition: 0.4s; }
+        .f-card:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.03); }
+        .f-card i { color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; display: block; }
+        .f-card h4 { margin-bottom: 12px; font-size: 1.1rem; }
+        .f-card p { color: var(--text-dim); font-size: 0.9rem; }
 
-        .btn { padding: 18px 45px; border-radius: 4px; font-weight: 800; text-transform: uppercase; text-decoration: none; display: inline-block; transition: 0.3s; border: none; cursor: pointer; }
+        /* FAQ */
+        .faq-wrapper { max-width: 900px; margin: 0 auto; }
+        .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; }
+        .faq-header { padding: 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; }
+        .faq-body { padding: 0 25px; max-height: 0; overflow: hidden; transition: 0.4s ease; color: var(--text-dim); font-size: 0.95rem; }
+        .faq-item.active { border-color: var(--secondary); }
+        .faq-item.active .faq-body { padding-bottom: 25px; max-height: 200px; }
+        .faq-icon { transition: 0.3s; color: var(--primary); }
+        .faq-item.active .faq-icon { transform: rotate(45deg); }
+
+        /* Buttons */
+        .btn { padding: 16px 35px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: 0.4s; border: none; cursor: pointer; font-size: 0.9rem; }
         .btn-primary { background: var(--primary); color: #000; }
-        .btn-primary:hover { box-shadow: 0 0 30px var(--primary); transform: translateY(-2px); }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary-glow); }
 
-        .faq-item { background: var(--card); border: 1px solid var(--border); margin-bottom: 15px; border-radius: 12px; cursor: pointer; }
-        .faq-q { padding: 20px; display: flex; justify-content: space-between; font-weight: 600; }
-        .faq-a { padding: 0 20px 20px; color: #888; display: none; }
+        /* Loader */
+        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 1s; }
+        .loader-circle { width: 50px; height: 50px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); color: #444; font-size: 0.8rem; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
     <div id="loader">
-        <div class="logo">BYTEGUARD <span style="font-weight: 300; color: #fff;">OMEGA</span></div>
-        <div class="load-bar"><div class="load-progress"></div></div>
-        <div style="margin-top: 15px; font-size: 0.6rem; letter-spacing: 2px; color: #444;">INITIALIZING DEFENSE SYSTEMS...</div>
+        <div class="loader-circle"></div>
+        <div style="margin-top: 20px; font-family: 'Fira Code'; font-size: 0.7rem; color: var(--primary);">BYTEGUARD_SYSTEM_INIT...</div>
     </div>
 
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
+    <div class="glow-sphere"></div>
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <div class="logo">BYTEGUARD <span style="font-weight: 300; color: #fff;">OMEGA</span></div>
-        <nav style="display: flex; gap: 30px;">
-            <a href="#demo" style="color: var(--primary); text-decoration: none; font-size: 0.75rem; font-weight: 700;">LIVE DEMO</a>
-            <a href="#features" style="color: #fff; text-decoration: none; font-size: 0.75rem;">SISTEMAS</a>
-            <a href="#pricing" style="color: #fff; text-decoration: none; font-size: 0.75rem;">PREÇOS</a>
+        <div class="logo">BYTEGUARD <span>OMEGA</span></div>
+        <nav>
+            <a href="#features">Tecnologia</a>
+            <a href="#matrix">Detecções</a>
+            <a href="#faq">FAQ</a>
+            <a href="#pricing" class="btn btn-primary" style="padding: 10px 20px; margin-left: 20px;">Get Access</a>
         </nav>
     </header>
 
     <section class="hero">
-        <div data-aos="fade-down" style="color: var(--primary); font-size: 0.7rem; font-weight: 800; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 50px; margin-bottom: 20px;">V4.2 OMEGA EDITION</div>
-        <h1 data-aos="fade-up">A Morte das <span>Trapaças.</span></h1>
-        <p style="max-width: 650px; color: #888; margin-bottom: 40px;" data-aos="fade-up" data-aos-delay="100">Proteja seu servidor com o anti-cheat mais avançado do cenário. Heurística avançada, zero latência e banimentos automáticos em milissegundos.</p>
-        <div data-aos="zoom-in" data-aos-delay="300">
-            <a href="#pricing" class="btn btn-primary">Adquirir Proteção</a>
-        </div>
-    </section>
-
-    <section id="demo">
-        <div style="text-align: center; margin-bottom: 60px;">
-            <h2 class="section-title" data-aos="fade-up">Inteligência <span>Ativa</span></h2>
-            <p style="color: #666;">Observe a resposta do servidor contra tentativas coordenadas de injeção.</p>
-        </div>
-
-        <div class="simulation-container" data-aos="zoom-in" id="sim-box">
-            <div class="sim-header">
-                <div style="display: flex; gap: 6px;"><div class="dot" style="width:10px; height:10px; border-radius:50%; background:#ff5f56;"></div><div class="dot" style="width:10px; height:10px; border-radius:50%; background:#ffbd2e;"></div><div class="dot" style="width:10px; height:10px; border-radius:50%; background:#27c93f;"></div></div>
-                <span style="font-size: 0.65rem; color: #555; font-family: monospace;">EXPLOITER_V6_SIMULATOR</span>
-            </div>
-            <div class="sim-body" style="position: relative;">
-                <div id="kick-screen">
-                    <img src="https://cdn-icons-png.flaticon.com/512/753/341.png" width="40" style="margin-bottom: 10px;">
-                    <h3 style="font-family: sans-serif;">Disconnected</h3>
-                    <p style="font-family: sans-serif; font-size: 0.9rem; margin-top: 10px;">Reason: [ByteGuard] Exploit Environment Detected.</p>
-                    <button onclick="startSimulation()" class="btn-primary" style="margin-top: 20px; padding: 10px 20px; font-size: 0.7rem;">Tentar Novamente</button>
-                </div>
-                
-                <div class="sim-panel">
-                    <div style="color: #444; margin-bottom: 10px;">-- Client Side Executor</div>
-                    <div id="client-typing" class="typing-effect"></div>
-                    <div id="client-logs"></div>
-                </div>
-                <div class="sim-panel server-logs">
-                    <div style="color: #444; margin-bottom: 10px;">// Server Side Console</div>
-                    <div id="server-logs"></div>
-                </div>
-            </div>
+        <span class="section-tag" data-aos="fade-right">Next-Gen Cyber Security</span>
+        <h1 data-aos="fade-up">A nova era da<br><span>Segurança Digital.</span></h1>
+        <p style="max-width: 600px; color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem;" data-aos="fade-up" data-aos-delay="100">
+            Não apenas um anti-cheat, mas uma fortaleza. O ByteGuard Omega utiliza algoritmos de heurística avançada para anular trapaças antes mesmo de serem executadas.
+        </p>
+        <div style="display: flex; gap: 20px;" data-aos="fade-up" data-aos-delay="200">
+            <a href="#pricing" class="btn btn-primary">Adquirir Licença</a>
+            <a href="#features" class="btn" style="background: rgba(255,255,255,0.05); color: #fff;">Ver Documentação</a>
         </div>
     </section>
 
     <section id="features">
-        <div class="grid">
-            <div class="card" data-aos="fade-up">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Anti-DEX Protection</h3>
-                <p style="color: #888;">Bloqueia exploradores de interface e visualizadores de script locais em tempo real.</p>
+        <span class="section-tag">Features</span>
+        <h2 class="section-title">Proteção <span>Multi-Layer</span></h2>
+        
+        <div class="tabs-container" data-aos="fade-up">
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="openTab(event, 'defense')">Defesa Ativa</button>
+                <button class="tab-btn" onclick="openTab(event, 'network')">Network & Data</button>
+                <button class="tab-btn" onclick="openTab(event, 'advanced')">Avançado</button>
             </div>
-            <div class="card" data-aos="fade-up" data-aos-delay="100">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Network Security</h3>
-                <p style="color: #888;">Interceptação de RemoteEvents para prevenir Spam e GodMode via Server-Side.</p>
+
+            <div id="defense" class="tab-content active">
+                <div class="f-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Anti-Injection 4.0</h4>
+                    <p>Detecção imediata de hooks em metatables e tentativas de modificação de core scripts.</p>
+                </div>
+                <div class="f-card">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Frame-Perfect Checks</h4>
+                    <p>Verificações de WalkSpeed e JumpPower calculadas por delta-time, impossível de burlar.</p>
+                </div>
+                <div class="f-card">
+                    <i class="fas fa-eye"></i>
+                    <h4>Visual Block</h4>
+                    <p>Sistema inteligente contra ESP e Wallhacks através de oclusão de dados no servidor.</p>
+                </div>
             </div>
-            <div class="card" data-aos="fade-up" data-aos-delay="200">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Custom Physics</h3>
-                <p style="color: #888;">Verificações de Raycast para evitar voos (Fly) e passagens por paredes (NoClip).</p>
+
+            <div id="network" class="tab-content">
+                <div class="f-card">
+                    <i class="fas fa-network-wired"></i>
+                    <h4>Remote Encryption</h4>
+                    <p>Criptografia dinâmica em todos os seus RemoteEvents, mudando as chaves a cada sessão.</p>
+                </div>
+                <div class="f-card">
+                    <i class="fas fa-filter"></i>
+                    <h4>Packet Filtering</h4>
+                    <p>Filtro de pacotes que identifica padrões de Spam e injeção de SQL/Argumentos.</p>
+                </div>
+            </div>
+
+            <div id="advanced" class="tab-content">
+                <div class="f-card">
+                    <i class="fas fa-microchip"></i>
+                    <h4>Memory Scan</h4>
+                    <p>Monitoramento de constantes de ambiente para detectar executores como Synapse e Wave.</p>
+                </div>
+                <div class="f-card">
+                    <i class="fas fa-user-slash"></i>
+                    <h4>Auto-Ban HWID</h4>
+                    <p>Sistema de banimento por hardware que impede que o trapaceiro retorne com novas contas.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="pricing" style="background: rgba(0,242,255,0.02);">
-        <h2 style="text-align: center; margin-bottom: 50px;" class="section-title">Investimento em <span>Paz.</span></h2>
-        <div class="grid">
-            <div class="card price-card" data-aos="fade-right">
-                <h4>Mensal</h4>
-                <div style="font-size: 2.5rem; font-weight: 700; margin: 20px 0;">R$ 49,90</div>
-                <p style="color: #666; margin-bottom: 20px;">Ideal para projetos em crescimento.</p>
-                <a href="#" class="btn btn-primary" style="width: 100%;">Assinar</a>
+    <section id="faq" style="background: rgba(255,255,255,0.01);">
+        <span class="section-tag" style="text-align: center;">Suporte</span>
+        <h2 class="section-title" style="text-align: center;">Perguntas <span>Frequentes</span></h2>
+        
+        <div class="faq-wrapper">
+            <div class="faq-item">
+                <div class="faq-header">O ByteGuard causa lag no servidor? <span class="faq-icon">+</span></div>
+                <div class="faq-body">Negativo. Nosso código foi otimizado para rodar em menos de 0.2ms por frame. Utilizamos multithreading e execução assíncrona para garantir que sua taxa de FPS permaneça intacta.</div>
             </div>
-            <div class="card price-card featured" data-aos="fade-up">
-                <h4 style="color: var(--primary);">Vitalício</h4>
-                <div style="font-size: 2.5rem; font-weight: 700; margin: 20px 0;">R$ 199,90</div>
-                <p style="color: #888; margin-bottom: 20px;">Pagamento único. Proteção para sempre.</p>
-                <a href="https://discord.gg/4uNWVnwMdR" class="btn btn-primary" style="width: 100%;">Garantir Agora</a>
+            <div class="faq-item">
+                <div class="faq-header">Funciona em quais jogos? <span class="faq-icon">+</span></div>
+                <div class="faq-body">O Omega Edition é compatível com qualquer experiência Roblox, desde simuladores simples até FPS competitivos complexos que exigem alta performance.</div>
             </div>
-        </div>
-    </section>
-
-    <section id="faq">
-        <h2 style="text-align: center; margin-bottom: 40px;">Dúvidas <span>Frequentes</span></h2>
-        <div style="max-width: 800px; margin: 0 auto;">
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">O ByteGuard detecta Synapse/Wave? <span>+</span></div>
-                <div class="faq-a">Sim. Utilizamos verificações de metatable e constantes de ambiente para identificar os principais executores do mercado.</div>
+            <div class="faq-item">
+                <div class="faq-header">Como recebo as atualizações? <span class="faq-icon">+</span></div>
+                <div class="faq-body">Nosso sistema possui Auto-Update. Sempre que nossa equipe lança um patch contra um novo exploit, seu servidor recebe a atualização automaticamente sem necessidade de reinstalação.</div>
             </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">Como é feita a instalação? <span>+</span></div>
-                <div class="faq-a">Simples. Basta arrastar nosso Model oficial para o ServerScriptService e inserir sua Key.</div>
+            <div class="faq-item">
+                <div class="faq-header">É seguro contra falsos positivos? <span class="faq-icon">+</span></div>
+                <div class="faq-body">Sim. Implementamos um sistema de "Confiança Progressiva". O jogador só é punido após o sistema confirmar a irregularidade através de 3 métodos de verificação diferentes.</div>
             </div>
         </div>
     </section>
 
-    <footer>
-        BYTEGUARD OMEGA &copy; 2026 • ADVANCED CYBER DEFENSE FOR ROBLOX
+    <footer style="padding: 100px 10%; background: #000; border-top: 1px solid var(--border); text-align: center;">
+        <div class="logo" style="justify-content: center; margin-bottom: 20px;">BYTEGUARD <span>OMEGA</span></div>
+        <p style="color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px;">© 2026 BYTEGUARD SYSTEMS - ALL RIGHTS RESERVED</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        AOS.init();
+
         // Loader
-        window.onload = () => { 
-            setTimeout(() => { document.getElementById('loader').style.opacity = '0'; 
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1000);
-            AOS.init({ duration: 1000 });
-            }, 2500);
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+            }, 2000);
         };
 
-        // Background Grid Effect
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let mouse = { x: 0, y: 0 };
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // Tabs Logic
+        function openTab(evt, tabName) {
+            let i, tabContent, tabBtn;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) tabContent[i].classList.remove("active");
+            
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) tabBtn[i].classList.remove("active");
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
         }
 
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-
-        function drawGrid() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(0, 242, 255, 0.05)';
-            ctx.lineWidth = 1;
-            const size = 50;
-
-            for (let x = 0; x < canvas.width; x += size) {
-                for (let y = 0; y < canvas.height; y += size) {
-                    const dx = x - mouse.x;
-                    const dy = y - mouse.y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    const opacity = Math.max(0, 1 - dist / 300);
-                    
-                    ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 0.2})`;
-                    ctx.strokeRect(x, y, size, size);
-                }
-            }
-            requestAnimationFrame(drawGrid);
-        }
-        drawGrid();
-
-        // Cursor
-        const cursor = document.getElementById('cursor');
-        const dot = document.getElementById('cursor-dot');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX - 12 + 'px'; cursor.style.top = e.clientY - 12 + 'px';
-            dot.style.left = e.clientX - 2 + 'px'; dot.style.top = e.clientY - 2 + 'px';
+        // FAQ Logic
+        document.querySelectorAll('.faq-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                item.classList.toggle('active');
+            });
         });
 
-        // FAQ
-        function toggleFaq(el) {
-            const a = el.querySelector('.faq-a');
-            a.style.display = a.style.display === 'block' ? 'none' : 'block';
-        }
+        // Mouse Tracker
+        const cursor = document.getElementById('cursor');
+        const dot = document.getElementById('cursor-dot');
+        const glow = document.querySelector('.glow-sphere');
 
-        // Complex Simulation Logic
-        const scripts = [
-            "setreadonly(getrawmetatable(game), false)",
-            "hookfunction(checkcaller, function() return true end)",
-            "LocalPlayer.Character.Humanoid.WalkSpeed = 100"
-        ];
-        
-        async function startSimulation() {
-            document.getElementById('kick-screen').style.display = 'none';
-            document.getElementById('client-logs').innerHTML = "";
-            document.getElementById('server-logs').innerHTML = "";
-            document.getElementById('sim-box').style.borderColor = "rgba(0, 242, 255, 0.1)";
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            dot.style.left = e.clientX - 2 + 'px';
+            dot.style.top = e.clientY - 2 + 'px';
+            glow.style.left = e.clientX - 250 + 'px';
+            glow.style.top = e.clientY - 250 + 'px';
+        });
 
-            for(let script of scripts) {
-                await typeScript(script);
-                addLog('client-logs', `Attempting injection: ${script.substring(0,15)}...`, '#888');
-                await sleep(500);
+        // Background Animation
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawGrid() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.strokeStyle = "rgba(0, 242, 255, 0.03)";
+            ctx.lineWidth = 1;
+            const step = 60;
+            for(let x=0; x<canvas.width; x+=step) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
             }
-
-            // Server Reaction
-            setTimeout(() => {
-                addLog('server-logs', '[!] ALERT: Metatable hook attempt detected', '#ff004c');
-            }, 500);
-            setTimeout(() => {
-                addLog('server-logs', '[!] ALERT: WalkSpeed anomaly (100 > 16)', '#ff004c');
-            }, 1200);
-            setTimeout(() => {
-                addLog('server-logs', '[ACTION] Flagging user. Executing Kick...', '#ff004c');
-                document.getElementById('sim-box').style.borderColor = "#ff004c";
-            }, 2000);
-            setTimeout(() => {
-                document.getElementById('kick-screen').style.display = 'flex';
-            }, 3000);
+            for(let y=0; y<canvas.height; y+=step) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
         }
-
-        function typeScript(txt) {
-            return new Promise(resolve => {
-                let i = 0;
-                const el = document.getElementById('client-typing');
-                el.innerHTML = "";
-                const interval = setInterval(() => {
-                    el.innerHTML += txt.charAt(i);
-                    i++;
-                    if(i >= txt.length) {
-                        clearInterval(interval);
-                        setTimeout(resolve, 500);
-                    }
-                }, 30);
-            });
-        }
-
-        function addLog(id, txt, color) {
-            const l = document.createElement('div');
-            l.style.color = color;
-            l.style.marginBottom = "5px";
-            l.innerHTML = `> ${txt}`;
-            document.getElementById(id).appendChild(l);
-        }
-
-        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-        // Start when in view
-        const observer = new IntersectionObserver(e => { if(e[0].isIntersecting) startSimulation(); }, {threshold: 0.6});
-        observer.observe(document.getElementById('demo'));
-
+        setInterval(drawGrid, 100);
     </script>
 </body>
 </html>
