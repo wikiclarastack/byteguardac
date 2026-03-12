@@ -11,332 +11,246 @@
         :root {
             --primary: #00f2ff;
             --secondary: #7000ff;
-            --bg: #050508;
-            --card-inner: rgba(15, 16, 22, 0.8);
+            --bg: #030305;
+            --card-inner: rgba(10, 11, 16, 0.9);
             --border: rgba(0, 242, 255, 0.1);
             --text: #ffffff;
-            --glow: rgba(0, 242, 255, 0.4);
+            --accent: #ff0055;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: none !important; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
         
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            line-height: 1.6; 
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+        /* Cursor Personalizado */
+        #cursor { width: 20px; height: 20px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; background: rgba(0, 242, 255, 0.1); }
+        #cursor-dot { width: 4px; height: 4px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
 
-        /* Custom Cursor */
-        #cursor {
-            width: 20px; height: 20px; border: 2px solid var(--primary);
-            border-radius: 50%; position: fixed; pointer-events: none;
-            z-index: 9999; transition: transform 0.1s;
-        }
+        canvas#particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4; }
 
-        canvas#particles {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.5;
-        }
-
-        h1, h2, h3, .logo { font-family: 'Space Grotesk', sans-serif; }
-
-        /* Header Estilizado */
         header {
-            position: fixed; width: 100%; padding: 25px 8%;
+            position: fixed; width: 100%; padding: 20px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(5, 5, 8, 0.6); backdrop-filter: blur(15px);
+            background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(15px);
             z-index: 1000; border-bottom: 1px solid var(--border);
         }
 
-        .logo { 
-            font-size: 1.6rem; font-weight: 700; color: var(--primary); 
-            letter-spacing: -1px; text-shadow: 0 0 20px var(--glow);
+        .logo { font-family: 'Space Grotesk'; font-weight: 700; color: var(--primary); font-size: 1.4rem; }
+
+        /* Hero */
+        .hero { height: 110vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; }
+        .hero h1 { font-family: 'Space Grotesk'; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 1; letter-spacing: -4px; margin-bottom: 20px; }
+        .hero h1 span { background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Console de Logs Simulado */
+        .console-container {
+            width: 100%; max-width: 800px; background: #000; border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px; margin-top: 50px; text-align: left;
+            font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; height: 180px;
+            overflow: hidden; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
+        .console-line { margin-bottom: 5px; opacity: 0; animation: scan 0.5s forwards; }
+        @keyframes scan { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .log-warn { color: #ffcc00; }
+        .log-crit { color: var(--accent); font-weight: bold; }
+        .log-success { color: #00ff88; }
 
-        nav a { 
-            color: #999; text-decoration: none; margin-left: 30px; 
-            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; 
-            transition: 0.3s; letter-spacing: 1px; 
+        /* Grid de Preços */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .price-card { 
+            background: var(--card-inner); padding: 40px; border-radius: 24px; border: 1px solid var(--border); 
+            transition: 0.4s; position: relative; display: flex; flex-direction: column;
         }
-        nav a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        .price-card.featured { border-color: var(--primary); transform: scale(1.05); z-index: 2; box-shadow: 0 0 40px rgba(0, 242, 255, 0.15); }
+        .price-card h4 { font-size: 1.5rem; margin-bottom: 10px; }
+        .price-card .cost { font-size: 3rem; font-weight: 700; margin-bottom: 20px; font-family: 'Space Grotesk'; }
+        .price-card .cost span { font-size: 1rem; color: #666; }
 
-        /* Hero Section */
-        .hero {
-            height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center;
-            padding: 0 5%; position: relative;
-        }
+        /* FAQ */
+        .faq-item { background: var(--card-inner); margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; }
+        .faq-question { padding: 20px; font-weight: 600; display: flex; justify-content: space-between; }
+        .faq-answer { padding: 0 20px 20px; color: #888; display: none; }
 
-        .badge {
-            background: rgba(0, 242, 255, 0.05); color: var(--primary);
-            padding: 8px 20px; border-radius: 100px; font-size: 0.75rem;
-            font-weight: 700; margin-bottom: 30px; border: 1px solid var(--primary);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        .hero h1 { 
-            font-size: clamp(3rem, 10vw, 6rem); line-height: 0.9; 
-            margin-bottom: 25px; font-weight: 700; letter-spacing: -4px;
-            background: linear-gradient(to bottom, #fff 40%, #555);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        .hero p { max-width: 600px; font-size: 1.1rem; color: #a1a1aa; margin-bottom: 40px; }
-
-        /* Botão Moderno */
         .btn {
-            padding: 20px 50px; background: #fff; color: #000;
-            text-decoration: none; border-radius: 4px; font-weight: 800;
-            text-transform: uppercase; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-            border: none; position: relative; overflow: hidden;
+            padding: 18px 40px; border-radius: 8px; font-weight: 700; text-transform: uppercase;
+            text-decoration: none; display: inline-block; transition: 0.3s; margin-top: 20px; text-align: center;
         }
-        .btn::after {
-            content: ''; position: absolute; top: 0; left: -100%;
-            width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.5s;
-        }
-        .btn:hover::after { left: 100%; }
-        .btn:hover { 
-            background: var(--primary); transform: translateY(-5px); 
-            box-shadow: 0 15px 40px rgba(0, 242, 255, 0.4); 
-        }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-outline { border: 1px solid var(--border); color: #fff; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2); }
 
-        /* Seções e Cards */
-        section { padding: 140px 8%; }
-        .section-title { font-size: 3.5rem; margin-bottom: 80px; text-align: center; }
-        .section-title span { color: var(--primary); text-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
+        section { padding: 100px 8%; }
+        .section-tag { color: var(--primary); font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 15px; }
 
-        .grid-protections { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-
-        .protection-card {
-            background: var(--card-inner); padding: 50px 40px; border-radius: 24px;
-            border: 1px solid var(--border); backdrop-filter: blur(10px);
-            transition: 0.4s; position: relative; overflow: hidden;
-        }
-        .protection-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top left, rgba(0, 242, 255, 0.1), transparent);
-            opacity: 0; transition: 0.5s;
-        }
-        .protection-card:hover { border-color: var(--primary); transform: translateY(-10px); }
-        .protection-card:hover::before { opacity: 1; }
-
-        .protection-card h3 { font-size: 1.6rem; margin-bottom: 25px; display: flex; align-items: center; }
-        .protection-card h3::before { 
-            content: ''; width: 4px; height: 24px; background: var(--primary); 
-            margin-right: 15px; border-radius: 2px; box-shadow: 0 0 10px var(--primary);
-        }
-
-        .protection-card li { 
-            font-size: 0.95rem; margin-bottom: 15px; color: #a1a1aa; 
-            list-style: none; display: flex; align-items: center; 
-        }
-        .protection-card li::before { content: "▹"; color: var(--primary); margin-right: 12px; }
-
-        /* Why Us Section */
-        .why-us { 
-            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 100px; align-items: center;
-            background: rgba(255, 255, 255, 0.02); padding: 100px; border-radius: 50px;
-            border: 1px solid var(--border);
-        }
-
-        .stat-item { 
-            padding: 30px; border-bottom: 1px solid var(--border); text-align: center;
-        }
-        .stat-item h2 { font-size: 3.5rem; color: var(--primary); }
-        .stat-item p { text-transform: uppercase; font-size: 0.8rem; letter-spacing: 3px; color: #666; }
-
-        footer { 
-            padding: 80px 0; border-top: 1px solid var(--border); 
-            text-align: center; font-size: 0.75rem; color: #555; 
-            background: #020204;
-        }
-
-        /* Responsividade */
-        @media (max-width: 968px) {
-            header { padding: 20px 5%; }
-            nav { display: none; }
-            .why-us { grid-template-columns: 1fr; padding: 40px; }
-            .section-title { font-size: 2.5rem; }
-            #cursor { display: none; }
-        }
+        footer { padding: 50px; border-top: 1px solid var(--border); text-align: center; color: #444; }
     </style>
 </head>
 <body>
 
     <div id="cursor"></div>
+    <div id="cursor-dot"></div>
     <canvas id="particles"></canvas>
 
     <header>
         <div class="logo">BYTEGUARD <span style="font-weight: 300; color: #fff;">OMEGA</span></div>
-        <nav>
-            <a href="#home">Início</a>
-            <a href="#protections">Sistemas</a>
-            <a href="#why">Diferenciais</a>
-            <a href="https://discord.gg/4uNWVnwMdR">Discord</a>
+        <nav style="display: flex; gap: 20px;">
+            <a href="#features" style="color: #888; text-decoration: none; font-size: 0.8rem; font-weight: 600;">SISTEMAS</a>
+            <a href="#pricing" style="color: #888; text-decoration: none; font-size: 0.8rem; font-weight: 600;">PREÇOS</a>
+            <a href="https://discord.gg/4uNWVnwMdR" style="color: var(--primary); text-decoration: none; font-size: 0.8rem; font-weight: 700;">SUPORTE</a>
         </nav>
     </header>
 
-    <section id="home" class="hero">
-        <div class="badge" data-aos="fade-down">CYBERSECURITY PROTOCOL 2026</div>
-        <h1 data-aos="fade-up" data-aos-delay="200">Muralha de <br>Código.</h1>
-        <p data-aos="fade-up" data-aos-delay="400">Proteção de elite baseada em inteligência heurística. Desenvolvido para neutralizar ameaças antes mesmo que elas cheguem ao servidor.</p>
-        <div data-aos="fade-up" data-aos-delay="600">
-            <a href="https://discord.gg/4uNWVnwMdR" class="btn">Obter Acesso Vitalício</a>
+    <section class="hero">
+        <span class="section-tag" data-aos="fade-down">Disponível para 2026</span>
+        <h1 data-aos="fade-up">A Segurança que seu <span>Jogo merece.</span></h1>
+        <p style="max-width: 700px; color: #888; font-size: 1.2rem;" data-aos="fade-up" data-aos-delay="100">
+            Não perca jogadores por causa de hackers. O ByteGuard Omega utiliza análise de pacotes em tempo real para banir trapaceiros antes do primeiro hit.
+        </p>
+        
+        <div class="console-container" data-aos="zoom-in" data-aos-delay="300">
+            <div id="console-logs">
+                <div class="console-line">[SYSTEM] ByteGuard Omega v4.2 initialized...</div>
+                <div class="console-line">[INFO] Scanning network packets...</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;" data-aos="fade-up" data-aos-delay="500">
+            <a href="#pricing" class="btn btn-primary">Ver Planos</a>
+            <a href="#features" class="btn btn-outline" style="margin-left: 15px;">Como funciona?</a>
         </div>
     </section>
 
-    <section id="protections">
-        <h2 class="section-title" data-aos="fade-up">Defesa em <span>Camadas</span></h2>
-        <div class="grid-protections">
-            <div class="protection-card" data-aos="fade-up" data-aos-delay="100">
-                <h3>Movement</h3>
-                <ul>
-                    <li>Anti-WalkSpeed dinâmico</li>
-                    <li>Anti-JumpPower & Height</li>
-                    <li>Predictive Physics Check</li>
-                </ul>
+    <section id="features">
+        <span class="section-tag">Tecnologia</span>
+        <h2 style="font-family: 'Space Grotesk'; font-size: 3rem; margin-bottom: 50px;">Por que somos o #1?</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
+            <div class="price-card" data-aos="fade-right">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">Inteligência de Rede</h3>
+                <p style="color: #888;">Nossa engine não verifica apenas a velocidade do jogador. Nós analisamos a latência entre o cliente e o servidor para garantir que um "Lag" não seja confundido com um "Teleport".</p>
             </div>
-            <div class="protection-card" data-aos="fade-up" data-aos-delay="200">
-                <h3>Physical</h3>
-                <ul>
-                    <li>Anti-Fly via Raycast</li>
-                    <li>Noclip State Detector</li>
-                    <li>BodyMover Injection Ban</li>
-                </ul>
-            </div>
-            <div class="protection-card" data-aos="fade-up" data-aos-delay="300">
-                <h3>Environment</h3>
-                <ul>
-                    <li>Anti-DEX & File Explorer</li>
-                    <li>Tool Injection Shield</li>
-                    <li>State Machine Guard</li>
-                </ul>
-            </div>
-            <div class="protection-card" data-aos="fade-up" data-aos-delay="400">
-                <h3>Network</h3>
-                <ul>
-                    <li>Anti-Lag Switch System</li>
-                    <li>Ping Compensation Engine</li>
-                    <li>Extreme CPS Detection</li>
-                </ul>
+            <div class="price-card" data-aos="fade-left">
+                <h3 style="color: var(--secondary); margin-bottom: 20px;">Obscuridade de Código</h3>
+                <p style="color: #888;">O ByteGuard se auto-criptografa a cada inicialização, tornando impossível para exploradores de arquivos locais (como DEX) detectarem nossas verificações de ambiente.</p>
             </div>
         </div>
     </section>
 
-    <section id="why">
-        <div class="why-us" data-aos="zoom-in">
-            <div>
-                <h2 style="font-size: 3rem; margin-bottom: 30px;">A Nova Era do <span>Anti-Cheat.</span></h2>
-                <div style="margin-bottom: 30px;">
-                    <h4 style="color: var(--primary);">Heurística de Precisão</h4>
-                    <p style="color: #888;">Nossos algoritmos analisam comportamentos, não apenas valores fixos, eliminando trapaças silenciosas.</p>
-                </div>
-                <div style="margin-bottom: 30px;">
-                    <h4 style="color: var(--primary);">Impacto Zero (0.01ms)</h4>
-                    <p style="color: #888;">Código otimizado em Luau de baixo nível para garantir que seu servidor mantenha 60 FPS constantes.</p>
-                </div>
+    <section id="pricing" style="background: rgba(255,255,255,0.01);">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <span class="section-tag">Preços</span>
+            <h2 style="font-family: 'Space Grotesk'; font-size: 3rem;">Escolha sua <span>Blindagem.</span></h2>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card" data-aos="fade-up">
+                <h4>Standard</h4>
+                <div class="cost">R$ 49<span> /mês</span></div>
+                <ul style="list-style: none; color: #888; margin-bottom: 30px;">
+                    <li>✓ Anti-Walkspeed & Jump</li>
+                    <li>✓ Anti-Fly Básico</li>
+                    <li>✓ Discord Logging</li>
+                    <li>✗ Anti-DEX Avançado</li>
+                </ul>
+                <a href="#" class="btn btn-outline">Selecionar</a>
             </div>
-            <div class="stats-container">
-                <div class="stat-item">
-                    <h2>99.9%</h2>
-                    <p>Detecção</p>
-                </div>
-                <div class="stat-item">
-                    <h2>&lt; 1ms</h2>
-                    <p>Latência</p>
-                </div>
-                <div class="stat-item">
-                    <h2>24/7</h2>
-                    <p>Monitoramento</p>
-                </div>
+
+            <div class="price-card featured" data-aos="fade-up" data-aos-delay="200">
+                <div style="position: absolute; top: -15px; right: 20px; background: var(--primary); color: #000; padding: 5px 15px; border-radius: 20px; font-size: 0.7rem; font-weight: 800;">MAIS VENDIDO</div>
+                <h4>Omega Edition</h4>
+                <div class="cost">R$ 199<span> VITALÍCIO</span></div>
+                <ul style="list-style: none; color: #ccc; margin-bottom: 30px;">
+                    <li>✓ Todas as Proteções</li>
+                    <li>✓ Atualizações Semanais</li>
+                    <li>✓ Suporte Prioritário 24/7</li>
+                    <li>✓ Painel Web de Controle</li>
+                </ul>
+                <a href="https://discord.gg/4uNWVnwMdR" class="btn btn-primary">Comprar Agora</a>
+            </div>
+
+            <div class="price-card" data-aos="fade-up" data-aos-delay="400">
+                <h4>Enterprise</h4>
+                <div class="cost">Consultar</div>
+                <ul style="list-style: none; color: #888; margin-bottom: 30px;">
+                    <li>✓ Customização Total</li>
+                    <li>✓ Instalação Assistida</li>
+                    <li>✓ Proteção contra DDOs de API</li>
+                    <li>✓ Contrato de Garantia</li>
+                </ul>
+                <a href="#" class="btn btn-outline">Falar Conosco</a>
             </div>
         </div>
     </section>
 
-    <section style="text-align: center;">
-        <h2 class="section-title" data-aos="fade-up">Pronto para <span>blindar</span> seu projeto?</h2>
-        <p style="color: #777; margin-bottom: 50px;">A segurança que seu jogo merece, com o suporte que você precisa.</p>
-        <a href="https://discord.gg/4uNWVnwMdR" class="btn" data-aos="fade-up">Entrar na Comunidade</a>
+    <section id="faq">
+        <h2 style="font-family: 'Space Grotesk'; font-size: 2.5rem; text-align: center; margin-bottom: 50px;">Perguntas Frequentes</h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">O sistema causa lag no servidor? <span>+</span></div>
+                <div class="faq-answer">Não. O ByteGuard roda em threads separadas (Parallel Luau), garantindo que o processamento do jogo principal nunca seja afetado.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">Como recebo o produto? <span>+</span></div>
+                <div class="faq-answer">Após a confirmação, você recebe uma chave de licença via Discord e acesso ao nosso Loader exclusivo.</div>
+            </div>
+        </div>
     </section>
 
     <footer>
-        BYTEGUARD OMEGA &copy; 2026 • TODOS OS DIREITOS RESERVADOS
+        BYTEGUARD OMEGA &copy; 2026 • Desenvolvido para Desenvolvedores de Elite.
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true });
+        AOS.init({ duration: 800, once: true });
 
-        // Cursor Follower
+        // Cursor
         const cursor = document.getElementById('cursor');
+        const dot = document.getElementById('cursor-dot');
         document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            dot.style.left = e.clientX - 2 + 'px';
+            dot.style.top = e.clientY - 2 + 'px';
         });
+
+        // FAQ Toggle
+        function toggleFaq(el) {
+            const answer = el.querySelector('.faq-answer');
+            answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Console Simulation
+        const logs = [
+            "<span class='log-success'>[OK]</span> Security modules verified.",
+            "<span class='log-warn'>[WARN]</span> Attempted memory spike by 'User_99'.",
+            "<span class='log-crit'>[BAN]</span> Player 'HackerExploit' flagged for NoClip.",
+            "[INFO] Auto-update completed: Patched DEX v4.0.",
+            "<span class='log-success'>[INFO]</span> All server instances secured."
+        ];
+        let logIdx = 0;
+        setInterval(() => {
+            const container = document.getElementById('console-logs');
+            const newLine = document.createElement('div');
+            newLine.className = 'console-line';
+            newLine.innerHTML = logs[logIdx % logs.length];
+            container.appendChild(newLine);
+            if(container.children.length > 6) container.removeChild(container.firstChild);
+            logIdx++;
+        }, 2500);
 
         // Particle System
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        class P {
+            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.vX = Math.random() * 0.4 - 0.2; this.vY = Math.random() * 0.4 - 0.2; }
+            draw() { ctx.fillStyle = '#00f2ff'; ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill(); }
+            update() { this.x += this.vX; this.y += this.vY; if(this.x<0||this.x>canvas.width) this.vX*=-1; if(this.y<0||this.y>canvas.height) this.vY*=-1; }
         }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = '#00f2ff';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function createParticles() {
-            for (let i = 0; i < 100; i++) {
-                particles.push(new Particle());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-        createParticles();
-        animate();
+        for(let i=0; i<80; i++) particles.push(new P());
+        function anim() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(anim); }
+        initCanvas(); anim();
     </script>
 </body>
 </html>
