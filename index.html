@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByteGuard AC | End-To-End.</title>
+    <title>ByteGuard AC | End-To-End By EclipseSoftwares</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --primary: #00f2ff;
             --primary-glow: rgba(0, 242, 255, 0.5);
             --secondary: #7000ff;
-            --bg: #030308;
-            --card: rgba(10, 11, 20, 0.8);
-            --border: rgba(255, 255, 255, 0.05);
+            --bg: #020205;
+            --card: rgba(8, 9, 18, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
             --text: #ffffff;
             --text-dim: #94a3b8;
             --danger: #ff004c;
@@ -23,267 +23,331 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: none; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; scroll-behavior: smooth; }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-        /* Cursor Customizado */
-        #cursor { width: 20px; height: 20px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.15s ease-out; mix-blend-mode: difference; }
+        /* Cursor */
+        #cursor { width: 20px; height: 20px; border: 1px solid var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; mix-blend-mode: screen; }
         #cursor-dot { width: 4px; height: 4px; background: var(--primary); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
 
         /* Background Effects */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
-        .glow-sphere { position: fixed; width: 500px; height: 500px; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); filter: blur(80px); z-index: -1; opacity: 0.1; pointer-events: none; }
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; }
+        .bg-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, rgba(112, 0, 255, 0.05) 0%, transparent 50%); z-index: -1; pointer-events: none; }
 
         /* Header */
         header {
             position: fixed; width: 100%; padding: 20px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(3, 3, 8, 0.7); backdrop-filter: blur(20px);
+            background: rgba(2, 2, 5, 0.8); backdrop-filter: blur(20px);
             z-index: 1000; border-bottom: 1px solid var(--border);
         }
-        .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.4rem; color: #fff; text-decoration: none; }
         .logo span { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow); }
-        nav a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: 0.3s; margin-left: 30px; text-transform: uppercase; letter-spacing: 1px; }
-        nav a:hover { color: var(--primary); }
-
-        /* Sections */
-        section { padding: 120px 10%; position: relative; }
-        .section-tag { color: var(--primary); font-size: 0.7rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; display: block; }
-        .section-title { font-family: 'Space Grotesk'; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 30px; line-height: 1.1; }
+        
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: 0.3s; text-transform: uppercase; }
+        .nav-links a:hover { color: var(--primary); }
 
         /* Hero */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
-        .hero h1 span { background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+        .hero-badge { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 8px 20px; border-radius: 100px; font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 30px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0, 242, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0); } }
         
-        /* Tabs System */
-        .tabs-container { margin-top: 50px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 40px; }
-        .tabs-nav { display: flex; gap: 10px; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px 25px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.3s; }
-        .tab-btn.active { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary-glow); }
-        .tab-content { display: none; animation: fadeIn 0.5s ease; }
-        .tab-content.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .hero h1 { font-family: 'Space Grotesk'; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.9; margin-bottom: 30px; font-weight: 700; letter-spacing: -2px; }
+        .hero h1 span { background: linear-gradient(180deg, #fff, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Stats Bar */
+        .stats-bar { display: flex; gap: 50px; margin-top: 60px; padding: 20px 40px; background: var(--card); border: 1px solid var(--border); border-radius: 100px; backdrop-filter: blur(10px); }
+        .stat-item { text-align: center; }
+        .stat-value { display: block; color: var(--primary); font-weight: 800; font-size: 1.2rem; }
+        .stat-label { color: #555; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Tabs Section */
+        section { padding: 100px 10%; }
+        .tabs-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; }
+        .tab-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 25px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 0.8rem; }
+        .tab-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+        
+        .tab-content { display: none; animation: slideUp 0.5s ease forwards; }
+        .tab-content.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Feature Card */
-        .f-card { background: rgba(255,255,255,0.02); padding: 30px; border-radius: 16px; border: 1px solid var(--border); transition: 0.4s; }
-        .f-card:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.03); }
-        .f-card i { color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; display: block; }
-        .f-card h4 { margin-bottom: 12px; font-size: 1.1rem; }
-        .f-card p { color: var(--text-dim); font-size: 0.9rem; }
+        .feature-card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid var(--border); position: relative; overflow: hidden; transition: 0.4s; }
+        .feature-card:hover { border-color: var(--primary); transform: translateY(-10px); }
+        .feature-card i { font-size: 2rem; color: var(--primary); margin-bottom: 25px; }
+        .feature-card h3 { margin-bottom: 15px; font-family: 'Space Grotesk'; font-size: 1.4rem; }
+        .feature-card p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; }
+
+        /* Matrix Detection */
+        .matrix-container { background: #050508; border: 1px solid var(--border); border-radius: 15px; padding: 30px; font-family: 'Fira Code', monospace; }
+        .matrix-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.8rem; }
+        .status-ok { color: var(--success); }
+        .status-scan { color: var(--primary); animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
         /* FAQ */
-        .faq-wrapper { max-width: 900px; margin: 0 auto; }
-        .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; }
-        .faq-header { padding: 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; }
-        .faq-body { padding: 0 25px; max-height: 0; overflow: hidden; transition: 0.4s ease; color: var(--text-dim); font-size: 0.95rem; }
-        .faq-item.active { border-color: var(--secondary); }
-        .faq-item.active .faq-body { padding-bottom: 25px; max-height: 200px; }
-        .faq-icon { transition: 0.3s; color: var(--primary); }
-        .faq-item.active .faq-icon { transform: rotate(45deg); }
+        .faq-item { background: var(--card); border: 1px solid var(--border); margin-bottom: 10px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .faq-q { padding: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+        .faq-a { padding: 0 25px 25px; color: var(--text-dim); display: none; font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 5px; }
+        .faq-item:hover { border-color: var(--secondary); }
 
-        /* Buttons */
-        .btn { padding: 16px 35px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: 0.4s; border: none; cursor: pointer; font-size: 0.9rem; }
+        /* Footer / Brand */
+        .brand-section { text-align: center; padding: 100px 0; border-top: 1px solid var(--border); background: linear-gradient(180deg, transparent, rgba(112, 0, 255, 0.05)); }
+        .brand-logo { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+        .brand-logo span { color: var(--secondary); }
+
+        .btn { padding: 18px 40px; border-radius: 12px; font-weight: 800; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: 0.4s; border: none; cursor: pointer; font-size: 0.8rem; letter-spacing: 1px; }
         .btn-primary { background: var(--primary); color: #000; }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary-glow); }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 40px var(--primary-glow); }
+        .btn-discord { background: #5865F2; color: #fff; }
 
-        /* Loader */
-        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 1s; }
-        .loader-circle { width: 50px; height: 50px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite linear; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
+        footer { padding: 50px; text-align: center; border-top: 1px solid var(--border); background: #010103; }
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <div class="loader-circle"></div>
-        <div style="margin-top: 20px; font-family: 'Fira Code'; font-size: 0.7rem; color: var(--primary);">BYTEGUARD_SYSTEM_INIT...</div>
-    </div>
-
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
-    <div class="glow-sphere"></div>
+    <div class="bg-gradient"></div>
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <div class="logo">BYTEGUARD <span>OMEGA</span></div>
-        <nav>
+        <a href="#" class="logo">BYTEGUARD <span>OMEGA</span></a>
+        <nav class="nav-links">
             <a href="#features">Tecnologia</a>
             <a href="#matrix">Detecções</a>
-            <a href="#faq">FAQ</a>
-            <a href="#pricing" class="btn btn-primary" style="padding: 10px 20px; margin-left: 20px;">Get Access</a>
+            <a href="#faq">Suporte</a>
+            <a href="https://silva777onlyportfolio.vercel.app" target="_blank" style="color: var(--primary)">Dono</a>
+            <a href="https://discord.gg/4uNWVnwMdR" class="btn-discord" style="padding: 8px 15px; border-radius: 5px;">Discord</a>
         </nav>
     </header>
 
     <section class="hero">
-        <span class="section-tag" data-aos="fade-right">Next-Gen Cyber Security</span>
-        <h1 data-aos="fade-up">A nova era da<br><span>Segurança Digital.</span></h1>
-        <p style="max-width: 600px; color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem;" data-aos="fade-up" data-aos-delay="100">
-            Não apenas um anti-cheat, mas uma fortaleza. O ByteGuard Omega utiliza algoritmos de heurística avançada para anular trapaças antes mesmo de serem executadas.
+        <div class="hero-badge" data-aos="fade-down">POWERED BY ECLIPSESOFTWARES</div>
+        <h1 data-aos="fade-up">A Segurança que seu<br><span>Projeto Merece.</span></h1>
+        <p style="max-width: 700px; color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem;" data-aos="fade-up" data-aos-delay="100">
+            O ByteGuard Omega é a solução definitiva em proteção para Roblox. Desenvolvido com tecnologia de interceptação de memória e criptografia de remotes pela <b>EclipseSoftwares</b>.
         </p>
-        <div style="display: flex; gap: 20px;" data-aos="fade-up" data-aos-delay="200">
-            <a href="#pricing" class="btn btn-primary">Adquirir Licença</a>
-            <a href="#features" class="btn" style="background: rgba(255,255,255,0.05); color: #fff;">Ver Documentação</a>
+        
+        <div style="display: flex; gap: 20px;" data-aos="zoom-in" data-aos-delay="200">
+            <a href="#pricing" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Obter Licença</a>
+            <a href="https://discord.gg/4uNWVnwMdR" target="_blank" class="btn btn-discord"><i class="fab fa-discord"></i> Entrar na Comunidade</a>
+        </div>
+
+        <div class="stats-bar" data-aos="fade-up" data-aos-delay="400">
+            <div class="stat-item"><span class="stat-value">500+</span><span class="stat-label">Servidores</span></div>
+            <div class="stat-item"><span class="stat-value">24/7</span><span class="stat-label">Uptime</span></div>
+            <div class="stat-item"><span class="stat-value">0.1ms</span><span class="stat-label">Latência</span></div>
+            <div class="stat-item"><span class="stat-value">15k+</span><span class="stat-label">Bans Ativos</span></div>
         </div>
     </section>
 
     <section id="features">
-        <span class="section-tag">Features</span>
-        <h2 class="section-title">Proteção <span>Multi-Layer</span></h2>
-        
-        <div class="tabs-container" data-aos="fade-up">
-            <div class="tabs-nav">
-                <button class="tab-btn active" onclick="openTab(event, 'defense')">Defesa Ativa</button>
-                <button class="tab-btn" onclick="openTab(event, 'network')">Network & Data</button>
-                <button class="tab-btn" onclick="openTab(event, 'advanced')">Avançado</button>
-            </div>
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h2 class="hero-badge" style="animation: none;">NOSSAS CAPACIDADES</h2>
+            <h2 style="font-size: 3rem; font-family: 'Space Grotesk';">Poder <span>Inigualável</span></h2>
+        </div>
 
-            <div id="defense" class="tab-content active">
-                <div class="f-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h4>Anti-Injection 4.0</h4>
-                    <p>Detecção imediata de hooks em metatables e tentativas de modificação de core scripts.</p>
-                </div>
-                <div class="f-card">
-                    <i class="fas fa-bolt"></i>
-                    <h4>Frame-Perfect Checks</h4>
-                    <p>Verificações de WalkSpeed e JumpPower calculadas por delta-time, impossível de burlar.</p>
-                </div>
-                <div class="f-card">
-                    <i class="fas fa-eye"></i>
-                    <h4>Visual Block</h4>
-                    <p>Sistema inteligente contra ESP e Wallhacks através de oclusão de dados no servidor.</p>
-                </div>
-            </div>
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="showTab('player')">Player Defense</button>
+            <button class="tab-btn" onclick="showTab('network')">Network & Data</button>
+            <button class="tab-btn" onclick="showTab('exploit')">Exploit Counter</button>
+        </div>
 
-            <div id="network" class="tab-content">
-                <div class="f-card">
-                    <i class="fas fa-network-wired"></i>
-                    <h4>Remote Encryption</h4>
-                    <p>Criptografia dinâmica em todos os seus RemoteEvents, mudando as chaves a cada sessão.</p>
-                </div>
-                <div class="f-card">
-                    <i class="fas fa-filter"></i>
-                    <h4>Packet Filtering</h4>
-                    <p>Filtro de pacotes que identifica padrões de Spam e injeção de SQL/Argumentos.</p>
-                </div>
+        <div id="player" class="tab-content active">
+            <div class="feature-card">
+                <i class="fas fa-running"></i>
+                <h3>Anti-Speed & Fly</h3>
+                <p>Algoritmos de verificação vetorial que detectam inconsistências de movimento em milissegundos.</p>
             </div>
+            <div class="feature-card">
+                <i class="fas fa-ghost"></i>
+                <h3>NoClip Bypass</h3>
+                <p>Cálculo de Raycast no servidor para impedir que jogadores atravessem qualquer objeto sólido.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-bullseye"></i>
+                <h3>Aimbot Shield</h3>
+                <p>Analisa a suavidade da câmera e padrões de clique para identificar assistências de mira externas.</p>
+            </div>
+        </div>
 
-            <div id="advanced" class="tab-content">
-                <div class="f-card">
-                    <i class="fas fa-microchip"></i>
-                    <h4>Memory Scan</h4>
-                    <p>Monitoramento de constantes de ambiente para detectar executores como Synapse e Wave.</p>
-                </div>
-                <div class="f-card">
-                    <i class="fas fa-user-slash"></i>
-                    <h4>Auto-Ban HWID</h4>
-                    <p>Sistema de banimento por hardware que impede que o trapaceiro retorne com novas contas.</p>
-                </div>
+        <div id="network" class="tab-content">
+            <div class="feature-card">
+                <i class="fas fa-lock"></i>
+                <h3>Remote Encryption</h3>
+                <p>Criptografia de ponta a ponta em todos os RemoteEvents, tornando-os ilegíveis para executores.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-vial"></i>
+                <h3>Exploit Injection</h3>
+                <p>Bloqueio total contra Dex Explorer e Remote Spyers que tentam ler seu código fonte.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-virus"></i>
+                <h3>Spam Protection</h3>
+                <p>Rate-limit inteligente que silencia automaticamente qualquer usuário tentando sobrecarregar o tráfego.</p>
+            </div>
+        </div>
+
+        <div id="exploit" class="tab-content">
+            <div class="feature-card">
+                <i class="fas fa-microchip"></i>
+                <h3>Metatable Hooking</h3>
+                <p>Proteção de tabelas globais (getrawmetatable) contra modificações de scripts de terceiros.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-mask"></i>
+                <h3>Environment Scan</h3>
+                <p>Varredura contínua de variáveis de ambiente para detectar a presença de Synapse, Wave ou Fluxus.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-fingerprint"></i>
+                <h3>HWID Ban System</h3>
+                <p>Banimentos que perseguem o hardware do usuário, impedindo o retorno com contas alternativas.</p>
             </div>
         </div>
     </section>
 
-    <section id="faq" style="background: rgba(255,255,255,0.01);">
-        <span class="section-tag" style="text-align: center;">Suporte</span>
-        <h2 class="section-title" style="text-align: center;">Perguntas <span>Frequentes</span></h2>
-        
-        <div class="faq-wrapper">
-            <div class="faq-item">
-                <div class="faq-header">O ByteGuard causa lag no servidor? <span class="faq-icon">+</span></div>
-                <div class="faq-body">Negativo. Nosso código foi otimizado para rodar em menos de 0.2ms por frame. Utilizamos multithreading e execução assíncrona para garantir que sua taxa de FPS permaneça intacta.</div>
+    <section id="matrix">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+            <div>
+                <h2 class="section-tag">Live Monitor</h2>
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px; font-family: 'Space Grotesk';">Detecção em <span>Tempo Real</span></h2>
+                <p style="color: var(--text-dim); margin-bottom: 30px;">O ByteGuard monitora constantemente o ambiente de execução do seu jogo, garantindo que nenhum script malicioso seja injetado.</p>
+                <a href="https://discord.gg/4uNWVnwMdR" class="btn btn-primary">Ver Logs no Discord</a>
             </div>
-            <div class="faq-item">
-                <div class="faq-header">Funciona em quais jogos? <span class="faq-icon">+</span></div>
-                <div class="faq-body">O Omega Edition é compatível com qualquer experiência Roblox, desde simuladores simples até FPS competitivos complexos que exigem alta performance.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-header">Como recebo as atualizações? <span class="faq-icon">+</span></div>
-                <div class="faq-body">Nosso sistema possui Auto-Update. Sempre que nossa equipe lança um patch contra um novo exploit, seu servidor recebe a atualização automaticamente sem necessidade de reinstalação.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-header">É seguro contra falsos positivos? <span class="faq-icon">+</span></div>
-                <div class="faq-body">Sim. Implementamos um sistema de "Confiança Progressiva". O jogador só é punido após o sistema confirmar a irregularidade através de 3 métodos de verificação diferentes.</div>
+            <div class="matrix-container">
+                <div class="matrix-row"><span>Checking Metatables...</span> <span class="status-ok">[SECURE]</span></div>
+                <div class="matrix-row"><span>Scanning Environment...</span> <span class="status-ok">[CLEAN]</span></div>
+                <div class="matrix-row"><span>WalkSpeed Check...</span> <span class="status-ok">[16/16]</span></div>
+                <div class="matrix-row"><span>Instance Guard...</span> <span class="status-scan">[SCANNING]</span></div>
+                <div class="matrix-row"><span>Remote Keys...</span> <span class="status-ok">[ENCRYPTED]</span></div>
+                <div class="matrix-row"><span>DEX Protection...</span> <span class="status-ok">[ACTIVE]</span></div>
+                <div class="matrix-row"><span>Memory Consistency...</span> <span class="status-ok">[MATCH]</span></div>
             </div>
         </div>
     </section>
 
-    <footer style="padding: 100px 10%; background: #000; border-top: 1px solid var(--border); text-align: center;">
-        <div class="logo" style="justify-content: center; margin-bottom: 20px;">BYTEGUARD <span>OMEGA</span></div>
-        <p style="color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px;">© 2026 BYTEGUARD SYSTEMS - ALL RIGHTS RESERVED</p>
+    <section id="faq">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px; font-family: 'Space Grotesk';">Dúvidas <span>Frequentes</span></h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">O ByteGuard detecta os novos exploits (Wave/Solara)? <span class="faq-icon">+</span></div>
+                <div class="faq-a">Sim. Estamos em constante atualização. Nossa equipe de engenharia da EclipseSoftwares estuda cada novo executor para garantir detecção no dia 0.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Como o HWID Ban funciona? <span class="faq-icon">+</span></div>
+                <div class="faq-a">Utilizamos uma combinação única de identificadores de hardware e dados de sessão para criar uma assinatura digital do trapaceiro. Se ele for banido, nem criando uma conta nova ele consegue entrar.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">É difícil de configurar? <span class="faq-icon">+</span></div>
+                <div class="faq-a">Nenhum pouco. Ao adquirir, você recebe um loader que faz todo o trabalho. Basta colocar sua Key no script e o ByteGuard assume a defesa.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">E se houver um falso positivo? <span class="faq-icon">+</span></div>
+                <div class="faq-a">Nosso sistema possui logs detalhados. Você pode revisar cada banimento no seu painel ou via Webhook no Discord e reverter se necessário.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="brand-section">
+        <div class="brand-logo">ECLIPSE<span>SOFTWARES</span></div>
+        <p style="color: var(--text-dim); margin-bottom: 30px;">Qualidade. Performance. Segurança.</p>
+        <a href="https://silva777onlyportfolio.vercel.app" target="_blank" class="btn btn-primary" style="background: var(--secondary); color: #fff;">Conheça o Desenvolvedor</a>
+    </section>
+
+    <footer>
+        <p style="color: #444; font-size: 0.7rem; letter-spacing: 2px;">BYTEGUARD OMEGA © 2026 - TODOS OS DIREITOS RESERVADOS À <a href="https://silva777onlyportfolio.vercel.app" style="color: var(--primary); text-decoration: none;">SILVA777</a></p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init();
-
-        // Loader
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
-            }, 2000);
-        };
+        AOS.init({ duration: 1000, once: true });
 
         // Tabs Logic
-        function openTab(evt, tabName) {
-            let i, tabContent, tabBtn;
-            tabContent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabContent.length; i++) tabContent[i].classList.remove("active");
-            
-            tabBtn = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tabBtn.length; i++) tabBtn[i].classList.remove("active");
-            
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
         // FAQ Logic
-        document.querySelectorAll('.faq-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const item = header.parentElement;
-                item.classList.toggle('active');
-            });
-        });
+        function toggleFaq(el) {
+            const a = el.querySelector('.faq-a');
+            const icon = el.querySelector('.faq-icon');
+            const isOpen = a.style.display === 'block';
+            
+            document.querySelectorAll('.faq-a').forEach(item => item.style.display = 'none');
+            document.querySelectorAll('.faq-icon').forEach(item => item.innerText = '+');
 
-        // Mouse Tracker
+            if(!isOpen) {
+                a.style.display = 'block';
+                icon.innerText = '-';
+            }
+        }
+
+        // Background Animation
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if(this.x > canvas.width) this.x = 0;
+                if(this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for(let i=0; i<100; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        createParticles();
+        animate();
+
+        // Cursor
         const cursor = document.getElementById('cursor');
         const dot = document.getElementById('cursor-dot');
-        const glow = document.querySelector('.glow-sphere');
-
         document.addEventListener('mousemove', e => {
             cursor.style.left = e.clientX - 10 + 'px';
             cursor.style.top = e.clientY - 10 + 'px';
             dot.style.left = e.clientX - 2 + 'px';
             dot.style.top = e.clientY - 2 + 'px';
-            glow.style.left = e.clientX - 250 + 'px';
-            glow.style.top = e.clientY - 250 + 'px';
         });
-
-        // Background Animation
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function drawGrid() {
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            ctx.strokeStyle = "rgba(0, 242, 255, 0.03)";
-            ctx.lineWidth = 1;
-            const step = 60;
-            for(let x=0; x<canvas.width; x+=step) {
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-            }
-            for(let y=0; y<canvas.height; y+=step) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-            }
-        }
-        setInterval(drawGrid, 100);
     </script>
 </body>
 </html>
