@@ -5,195 +5,338 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ByteGuard AC | Omega Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #00f2ff;
-            --secondary: #006aff;
-            --bg: #030305;
-            --card-inner: rgba(17, 18, 26, 0.6);
-            --border: rgba(0, 242, 255, 0.15);
+            --secondary: #7000ff;
+            --bg: #050508;
+            --card-inner: rgba(15, 16, 22, 0.8);
+            --border: rgba(0, 242, 255, 0.1);
             --text: #ffffff;
+            --glow: rgba(0, 242, 255, 0.4);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: none !important; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 20px; height: 20px; border: 2px solid var(--primary);
+            border-radius: 50%; position: fixed; pointer-events: none;
+            z-index: 9999; transition: transform 0.1s;
+        }
+
+        canvas#particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.5;
+        }
+
         h1, h2, h3, .logo { font-family: 'Space Grotesk', sans-serif; }
 
+        /* Header Estilizado */
         header {
-            position: fixed; width: 100%; padding: 20px 8%;
+            position: fixed; width: 100%; padding: 25px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(3, 3, 5, 0.7); backdrop-filter: blur(20px);
+            background: rgba(5, 5, 8, 0.6); backdrop-filter: blur(15px);
             z-index: 1000; border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 1.6rem; font-weight: 700; color: var(--primary); letter-spacing: -1px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.3); }
+        .logo { 
+            font-size: 1.6rem; font-weight: 700; color: var(--primary); 
+            letter-spacing: -1px; text-shadow: 0 0 20px var(--glow);
+        }
 
-        nav a { color: #888; text-decoration: none; margin-left: 25px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; transition: 0.4s; letter-spacing: 1px; }
+        nav a { 
+            color: #999; text-decoration: none; margin-left: 30px; 
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; 
+            transition: 0.3s; letter-spacing: 1px; 
+        }
         nav a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
+        /* Hero Section */
         .hero {
-            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; background: radial-gradient(circle at 50% 50%, #0a1221 0%, #030305 100%);
-            padding: 0 5%;
+            height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
+            padding: 0 5%; position: relative;
         }
 
-        .hero h1 { font-size: 5.5rem; line-height: 0.9; margin-bottom: 25px; font-weight: 700; letter-spacing: -3px; background: linear-gradient(180deg, #fff 30%, #444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { max-width: 650px; font-size: 1.1rem; color: #8a8a8e; margin-bottom: 40px; font-weight: 300; }
+        .badge {
+            background: rgba(0, 242, 255, 0.05); color: var(--primary);
+            padding: 8px 20px; border-radius: 100px; font-size: 0.75rem;
+            font-weight: 700; margin-bottom: 30px; border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+            animation: pulse 2s infinite;
+        }
 
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        .hero h1 { 
+            font-size: clamp(3rem, 10vw, 6rem); line-height: 0.9; 
+            margin-bottom: 25px; font-weight: 700; letter-spacing: -4px;
+            background: linear-gradient(to bottom, #fff 40%, #555);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero p { max-width: 600px; font-size: 1.1rem; color: #a1a1aa; margin-bottom: 40px; }
+
+        /* Botão Moderno */
         .btn {
-            padding: 18px 45px; background: #fff; color: #000;
-            text-decoration: none; border-radius: 2px; font-weight: 800;
-            text-transform: uppercase; transition: 0.4s; border: none; cursor: pointer;
-            letter-spacing: 1px; position: relative; overflow: hidden;
+            padding: 20px 50px; background: #fff; color: #000;
+            text-decoration: none; border-radius: 4px; font-weight: 800;
+            text-transform: uppercase; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            border: none; position: relative; overflow: hidden;
         }
-        .btn:hover { background: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 242, 255, 0.4); }
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        .btn:hover::after { left: 100%; }
+        .btn:hover { 
+            background: var(--primary); transform: translateY(-5px); 
+            box-shadow: 0 15px 40px rgba(0, 242, 255, 0.4); 
+        }
 
-        section { padding: 120px 8%; }
-        .section-title { font-size: 3rem; margin-bottom: 60px; text-align: center; font-weight: 700; letter-spacing: -1px; }
-        .section-title span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Seções e Cards */
+        section { padding: 140px 8%; }
+        .section-title { font-size: 3.5rem; margin-bottom: 80px; text-align: center; }
+        .section-title span { color: var(--primary); text-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
 
         .grid-protections { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
 
         .protection-card {
-            background: var(--card-inner); padding: 40px; border-radius: 20px;
-            border: 1px solid var(--border); backdrop-filter: blur(5px);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--card-inner); padding: 50px 40px; border-radius: 24px;
+            border: 1px solid var(--border); backdrop-filter: blur(10px);
+            transition: 0.4s; position: relative; overflow: hidden;
         }
-        .protection-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); }
-        .protection-card h3 { color: #fff; margin-bottom: 20px; font-size: 1.4rem; border-left: 3px solid var(--primary); padding-left: 15px; }
-        .protection-card li { font-size: 0.9rem; margin-bottom: 12px; color: #9da0a8; list-style: none; display: flex; align-items: center; }
-        .protection-card li::before { content: "→"; color: var(--primary); margin-right: 10px; font-weight: bold; }
+        .protection-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top left, rgba(0, 242, 255, 0.1), transparent);
+            opacity: 0; transition: 0.5s;
+        }
+        .protection-card:hover { border-color: var(--primary); transform: translateY(-10px); }
+        .protection-card:hover::before { opacity: 1; }
 
+        .protection-card h3 { font-size: 1.6rem; margin-bottom: 25px; display: flex; align-items: center; }
+        .protection-card h3::before { 
+            content: ''; width: 4px; height: 24px; background: var(--primary); 
+            margin-right: 15px; border-radius: 2px; box-shadow: 0 0 10px var(--primary);
+        }
+
+        .protection-card li { 
+            font-size: 0.95rem; margin-bottom: 15px; color: #a1a1aa; 
+            list-style: none; display: flex; align-items: center; 
+        }
+        .protection-card li::before { content: "▹"; color: var(--primary); margin-right: 12px; }
+
+        /* Why Us Section */
         .why-us { 
-            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
-            border-radius: 40px; padding: 80px;
+            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 100px; align-items: center;
+            background: rgba(255, 255, 255, 0.02); padding: 100px; border-radius: 50px;
+            border: 1px solid var(--border);
         }
-        .feature-box { margin-bottom: 35px; }
-        .feature-box h4 { color: var(--primary); font-size: 1.2rem; margin-bottom: 8px; }
-        .feature-box p { color: #71717a; font-size: 0.95rem; }
 
-        .stat-bar { display: flex; justify-content: space-around; background: var(--card-inner); padding: 40px; border-radius: 25px; border: 1px solid var(--border); margin-top: 50px; }
-        .stat-item { text-align: center; }
-        .stat-item h2 { font-size: 2.5rem; color: #fff; margin-bottom: 5px; }
-        .stat-item p { color: var(--primary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .stat-item { 
+            padding: 30px; border-bottom: 1px solid var(--border); text-align: center;
+        }
+        .stat-item h2 { font-size: 3.5rem; color: var(--primary); }
+        .stat-item p { text-transform: uppercase; font-size: 0.8rem; letter-spacing: 3px; color: #666; }
 
-        footer { padding: 60px; text-align: center; color: #444; font-size: 0.8rem; letter-spacing: 1px; }
+        footer { 
+            padding: 80px 0; border-top: 1px solid var(--border); 
+            text-align: center; font-size: 0.75rem; color: #555; 
+            background: #020204;
+        }
 
+        /* Responsividade */
         @media (max-width: 968px) {
-            .hero h1 { font-size: 3.5rem; }
-            .why-us { grid-template-columns: 1fr; padding: 40px; }
             header { padding: 20px 5%; }
             nav { display: none; }
+            .why-us { grid-template-columns: 1fr; padding: 40px; }
+            .section-title { font-size: 2.5rem; }
+            #cursor { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <div id="cursor"></div>
+    <canvas id="particles"></canvas>
+
     <header>
         <div class="logo">BYTEGUARD <span style="font-weight: 300; color: #fff;">OMEGA</span></div>
         <nav>
-            <a href="#home">Home</a>
+            <a href="#home">Início</a>
             <a href="#protections">Sistemas</a>
             <a href="#why">Diferenciais</a>
-            <a href="https://discord.gg/4uNWVnwMdR" target="_blank">Suporte</a>
+            <a href="https://discord.gg/4uNWVnwMdR">Discord</a>
         </nav>
     </header>
 
     <section id="home" class="hero">
-        <div style="background: rgba(0, 242, 255, 0.1); color: var(--primary); padding: 6px 15px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; margin-bottom: 20px; border: 1px solid var(--primary);">ESTÁVEL PARA 2026</div>
-        <h1>Muralha de <br>Código.</h1>
-        <p>Segurança de nível militar para servidores de alta performance. Detecte, neutralize e proteja seu ecossistema contra qualquer ameaça moderna.</p>
-        <a href="https://discord.gg/4uNWVnwMdR" target="_blank" class="btn">Adquirir Licença</a>
+        <div class="badge" data-aos="fade-down">CYBERSECURITY PROTOCOL 2026</div>
+        <h1 data-aos="fade-up" data-aos-delay="200">Muralha de <br>Código.</h1>
+        <p data-aos="fade-up" data-aos-delay="400">Proteção de elite baseada em inteligência heurística. Desenvolvido para neutralizar ameaças antes mesmo que elas cheguem ao servidor.</p>
+        <div data-aos="fade-up" data-aos-delay="600">
+            <a href="https://discord.gg/4uNWVnwMdR" class="btn">Obter Acesso Vitalício</a>
+        </div>
     </section>
 
     <section id="protections">
-        <h2 class="section-title">Proteção <span>Multi-Layer</span></h2>
+        <h2 class="section-title" data-aos="fade-up">Defesa em <span>Camadas</span></h2>
         <div class="grid-protections">
-            <div class="protection-card">
+            <div class="protection-card" data-aos="fade-up" data-aos-delay="100">
                 <h3>Movement</h3>
                 <ul>
                     <li>Anti-WalkSpeed dinâmico</li>
                     <li>Anti-JumpPower & Height</li>
-                    <li>Anti-Teleport (Rubberband)</li>
                     <li>Predictive Physics Check</li>
                 </ul>
             </div>
-            <div class="protection-card">
+            <div class="protection-card" data-aos="fade-up" data-aos-delay="200">
                 <h3>Physical</h3>
                 <ul>
                     <li>Anti-Fly via Raycast</li>
                     <li>Noclip State Detector</li>
-                    <li>Gravity Manipulation Lock</li>
                     <li>BodyMover Injection Ban</li>
                 </ul>
             </div>
-            <div class="protection-card">
+            <div class="protection-card" data-aos="fade-up" data-aos-delay="300">
                 <h3>Environment</h3>
                 <ul>
                     <li>Anti-DEX & File Explorer</li>
                     <li>Tool Injection Shield</li>
                     <li>State Machine Guard</li>
-                    <li>Seat Teleport Reach</li>
                 </ul>
             </div>
-            <div class="protection-card">
-                <h3>Server Side</h3>
+            <div class="protection-card" data-aos="fade-up" data-aos-delay="400">
+                <h3>Network</h3>
                 <ul>
                     <li>Anti-Lag Switch System</li>
-                    <li>Network Ping Compensation</li>
+                    <li>Ping Compensation Engine</li>
                     <li>Extreme CPS Detection</li>
-                    <li>Chat Spam Protection</li>
                 </ul>
             </div>
         </div>
     </section>
 
     <section id="why">
-        <div class="why-us">
+        <div class="why-us" data-aos="zoom-in">
             <div>
-                <h2 style="font-size: 3rem; margin-bottom: 30px;">O Anti-Cheat do <span>Futuro.</span></h2>
-                <div class="feature-box">
-                    <h4>Heurística Avançada</h4>
-                    <p>Não apenas bloqueia, mas aprende padrões de movimento para distinguir lag de trapaça real.</p>
+                <h2 style="font-size: 3rem; margin-bottom: 30px;">A Nova Era do <span>Anti-Cheat.</span></h2>
+                <div style="margin-bottom: 30px;">
+                    <h4 style="color: var(--primary);">Heurística de Precisão</h4>
+                    <p style="color: #888;">Nossos algoritmos analisam comportamentos, não apenas valores fixos, eliminando trapaças silenciosas.</p>
                 </div>
-                <div class="feature-box">
-                    <h4>Zero Falsos Positivos</h4>
-                    <p>O sistema de compensação de ping de 200ms garante que jogadores com internet instável joguem sem punições injustas.</p>
-                </div>
-                <div class="feature-box">
-                    <h4>Performance Isolada</h4>
-                    <p>O consumo de memória do servidor é praticamente nulo, permitindo 100+ jogadores simultâneos.</p>
+                <div style="margin-bottom: 30px;">
+                    <h4 style="color: var(--primary);">Impacto Zero (0.01ms)</h4>
+                    <p style="color: #888;">Código otimizado em Luau de baixo nível para garantir que seu servidor mantenha 60 FPS constantes.</p>
                 </div>
             </div>
-            <div style="text-align: center;">
-                <div class="stat-bar" style="flex-direction: column; gap: 30px;">
-                    <div class="stat-item">
-                        <h2>99.9%</h2>
-                        <p>Uptime</p>
-                    </div>
-                    <div class="stat-item">
-                        <h2>&lt; 1ms</h2>
-                        <p>Delay</p>
-                    </div>
-                    <div class="stat-item">
-                        <h2>OMEGA</h2>
-                        <p>Engine</p>
-                    </div>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <h2>99.9%</h2>
+                    <p>Detecção</p>
+                </div>
+                <div class="stat-item">
+                    <h2>&lt; 1ms</h2>
+                    <p>Latência</p>
+                </div>
+                <div class="stat-item">
+                    <h2>24/7</h2>
+                    <p>Monitoramento</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section style="text-align: center; background: radial-gradient(circle at top, #0d1a33 0%, #030305 100%);">
-        <h2 class="section-title">Pronto para <span>blindar</span> seu jogo?</h2>
-        <p style="color: #888; margin-bottom: 40px;">Junte-se a centenas de desenvolvedores que escolheram a elite da proteção.</p>
-        <a href="https://discord.gg/4uNWVnwMdR" target="_blank" class="btn">Entrar no Discord Oficial</a>
+    <section style="text-align: center;">
+        <h2 class="section-title" data-aos="fade-up">Pronto para <span>blindar</span> seu projeto?</h2>
+        <p style="color: #777; margin-bottom: 50px;">A segurança que seu jogo merece, com o suporte que você precisa.</p>
+        <a href="https://discord.gg/4uNWVnwMdR" class="btn" data-aos="fade-up">Entrar na Comunidade</a>
     </section>
 
     <footer>
-        BYTEGUARD OMEGA &copy; 2026 • ADVANCED CYBERSECURITY FOR ROBLOX
+        BYTEGUARD OMEGA &copy; 2026 • TODOS OS DIREITOS RESERVADOS
     </footer>
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Cursor Follower
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Particle System
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = '#00f2ff';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        createParticles();
+        animate();
+    </script>
 </body>
 </html>
